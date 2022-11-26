@@ -1,0 +1,76 @@
+#강화
+#주문의 흔적
+command /주문의흔적:
+	trigger:
+		give 1 paper named "&9주문의 흔적" with lore "F키를 누르면 사용" to player
+
+on swap hand items:
+	if name of player's tool is "&9주문의 흔적":
+		cancel event
+		remove 1 of player's tool from player's tool
+		
+		open chest with 1 rows named "&9주문의 흔적" to player
+
+		loop 4 times:
+			set {_slot} to loop-num - 1
+			set slot {_slot} of current inventory of player to paper named "&9주문의 흔적"
+		loop 4 times:
+			set {_slot} to loop-num + 4
+			set slot {_slot} of current inventory of player to paper named "&9주문의 흔적"
+
+		on inventory click:
+			if icname contains "&9주문의 흔적":
+				if clicked raw slot is not 4:
+					cancel event
+#메소
+every 1 seconds:
+	loop all players:
+		if {메소보기.%loop-player%} is true:
+			wipe loop-player's sidebar
+			set name of sidebar of loop-player to "&e메소"
+			set score "메소 : %{메소.%loop-player%}%" in sidebar of loop-player to 1
+
+command /메소초기화:
+	trigger:
+		if player is op:
+			set {메소.%player%} to 0
+			send action bar "메소를 초기화 했습니다" to player
+
+command /메소창 [<string>]:
+	trigger:
+		if arg 1 is "열기":
+			set {메소보기.%player%} to true
+			message "메소창을 활성화 했습니다"
+
+		if arg 1 is "닫기":
+			set {메소보기.%player%} to false
+			message "메소창을 비활성화 했습니다"
+
+on death of a zombie:
+	drop 1 paper named "&e메소" at victim
+
+on swap hand items:
+	if name of player's tool is "&e메소":
+		cancel event
+		remove 1 of player's tool from player's tool
+		set {_추가메소} to random integer between 1 and 99
+		add {_추가메소} to {메소.%player%}
+#아케인포스
+command /아케인포스:
+	trigger:
+		open chest with 1 raws named "&1아케인포스"
+		loop 3 times:
+			set {_slot} to loop-num -1
+			set {_slot} of current inventory of player to Blue Stained Glass Pane
+
+		loop 3 times:
+			set {_slot} to loop-num +5
+			set {_slot} of current inventory of player to Blue Stained Glass Pane
+
+set {%player%.ARC} to 0
+on death of a Wither:
+	drop 1 Heart of the Sea named "아케인심볼:위더" at victim
+on death of a Ender Dragon:
+	drop 1 Heart of the Sea named "아케인심볼:엔더드래곤" at victim
+on death of a Warden:
+	drop 1 Heart of the Sea named "아케인심볼:워든" at victim
